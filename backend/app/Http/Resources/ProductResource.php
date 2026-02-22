@@ -30,6 +30,7 @@ class ProductResource extends JsonResource
             'type' => $this->type,
             'is_active' => $this->is_active,
             'is_promo' => $this->is_promo,
+            'prices' => $this->when($this->getAttribute('sibling_prices'), fn() => $this->getAttribute('sibling_prices')),
         ];
     }
 }

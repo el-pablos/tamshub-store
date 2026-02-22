@@ -65,6 +65,22 @@ class ProductController extends Controller
             })
             ->firstOrFail();
 
+        // Load sibling products (same brand & category) as selectable price options
+        $memberLevel = request()->user()?->member_level ?? 'guest';
+        $siblings = Product::with('prices')
+            ->where('category_id', $product->category_id)
+            ->where('brand', $product->brand)
+            ->where('is_active', true)
+            ->orderBy('base_price')
+            ->get()
+            ->map(fn($p) => [
+                'id' => $p->id,
+                'name' => $p->product_name,
+                'sell_price' => $p->getPriceForLevel($memberLevel),
+            ]);
+
+        $product->setAttribute('sibling_prices', $siblings);
+
         return new ProductResource($product);
     }
 

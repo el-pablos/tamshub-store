@@ -13,7 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->statefulApi();
+        // Token-based auth only (Bearer token via Sanctum)
+        // statefulApi() removed — it enforces CSRF on first-party requests
+        // which conflicts with our SPA's token-based auth approach
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
