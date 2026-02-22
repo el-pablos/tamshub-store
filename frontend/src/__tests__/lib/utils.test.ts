@@ -1,4 +1,4 @@
-import { formatCurrency, formatDate, getStatusColor, getStatusLabel, censorText } from '@/lib/utils';
+import { formatCurrency, getStatusColor, getStatusLabel, censorText } from '@/lib/utils';
 
 describe('formatCurrency', () => {
   it('formats number as IDR currency', () => {

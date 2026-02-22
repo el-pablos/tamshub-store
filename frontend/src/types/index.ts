@@ -7,10 +7,17 @@ export interface Product {
   slug: string;
   brand: string | null;
   price: number;
+  base_price?: number;
+  image_url?: string | null;
   description: string | null;
   type: string;
   is_active: boolean;
   is_promo: boolean;
+  prices?: Array<{
+    id: number;
+    name: string;
+    sell_price: number;
+  }>;
 }
 
 export interface Category {

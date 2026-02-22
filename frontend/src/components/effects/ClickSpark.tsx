@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface ClickSparkProps {
   children: React.ReactNode;
@@ -10,23 +10,7 @@ interface ClickSparkProps {
 export default function ClickSpark({ children }: ClickSparkProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
-    }
-
-    const handleClick = (e: MouseEvent) => {
-      const sparkCount = 8;
-      for (let i = 0; i < sparkCount; i++) {
-        createSpark(e.clientX, e.clientY);
-      }
-    };
-
-    document.addEventListener('click', handleClick);
-    return () => document.removeEventListener('click', handleClick);
-  }, []);
-
-  const createSpark = (x: number, y: number) => {
+  const createSpark = useCallback((x: number, y: number) => {
     const spark = document.createElement('div');
     const angle = Math.random() * 360;
     const distance = Math.random() * 60 + 20;
@@ -57,7 +41,23 @@ export default function ClickSpark({ children }: ClickSparkProps) {
     }).onfinish = () => spark.remove();
 
     document.body.appendChild(spark);
-  };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const handleClick = (e: MouseEvent) => {
+      const sparkCount = 8;
+      for (let i = 0; i < sparkCount; i++) {
+        createSpark(e.clientX, e.clientY);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [createSpark]);
 
   return <div ref={containerRef}>{children}</div>;
 }

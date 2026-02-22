@@ -71,9 +71,9 @@ export default function AdminDashboardPage() {
             <tbody className="divide-y divide-gray-800">
               {dashboard.recent_orders?.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-800/50">
-                  <td className="p-4 text-white font-mono text-xs">{order.invoice_number}</td>
+                  <td className="p-4 text-white font-mono text-xs">{order.invoice}</td>
                   <td className="p-4 text-gray-300">{order.product_name}</td>
-                  <td className="p-4 text-indigo-400 font-medium">{formatCurrency(order.total_price)}</td>
+                  <td className="p-4 text-indigo-400 font-medium">{formatCurrency(order.total_amount)}</td>
                   <td className="p-4"><StatusBadge status={order.status} /></td>
                   <td className="p-4 text-gray-500 text-xs">{formatDate(order.created_at)}</td>
                 </tr>

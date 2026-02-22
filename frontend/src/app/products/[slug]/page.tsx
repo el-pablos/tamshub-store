@@ -34,8 +34,8 @@ export default function ProductDetailPage() {
       const result = await checkout.mutateAsync({
         product_id: selectedPrice,
         target_id: targetId,
-        target_server: targetServer || undefined,
-        payment_method_code: paymentMethod,
+        zone_id: targetServer || undefined,
+        payment_method: paymentMethod,
         phone: phone || undefined,
         email: email || undefined,
       });
@@ -43,7 +43,7 @@ export default function ProductDetailPage() {
       if (result.payment_url) {
         window.open(result.payment_url, '_blank');
       }
-      router.push(`/order/${result.order.invoice_number}`);
+      router.push(`/order/${result.order.invoice}`);
     } catch {
       // Error handled by mutation state
     }
@@ -60,7 +60,7 @@ export default function ProductDetailPage() {
           Produk
         </span>
         <ChevronRight size={14} />
-        <span className="text-gray-300">{product.name}</span>
+        <span className="text-gray-300">{product.product_name}</span>
       </div>
 
       {/* Product Info */}
@@ -68,13 +68,13 @@ export default function ProductDetailPage() {
         <div className="flex items-start gap-4">
           <div className="w-20 h-20 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0 overflow-hidden">
             {product.image_url ? (
-              <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+              <picture><img src={product.image_url} alt={product.product_name} className="w-full h-full object-cover" /></picture>
             ) : (
               <span className="text-3xl">🎮</span>
             )}
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">{product.name}</h1>
+            <h1 className="text-2xl font-bold text-white">{product.product_name}</h1>
             <p className="text-gray-400 text-sm mt-1">{product.brand}</p>
             {product.description && (
               <p className="text-gray-500 text-sm mt-2">{product.description}</p>
@@ -198,7 +198,7 @@ export default function ProductDetailPage() {
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Produk</span>
-                  <span className="text-white">{product.name}</span>
+                  <span className="text-white">{product.product_name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Item</span>
@@ -236,7 +236,7 @@ export default function ProductDetailPage() {
                 </div>
                 <div>
                   <p className="text-white text-sm font-medium">{pm.name}</p>
-                  <p className="text-gray-500 text-xs">{pm.type}</p>
+                  <p className="text-gray-500 text-xs">{pm.group}</p>
                 </div>
               </button>
             ))}

@@ -15,7 +15,6 @@ export default function FuzzyText({ text, className = '', intensity = 0.3 }: Fuz
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setDisplayText(text);
       return;
     }
 

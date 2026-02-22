@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
 import { useAdminComplaints, useReplyComplaint } from '@/hooks/useAdminApi';
-import { Loading, ErrorState, StatusBadge, Button, Input } from '@/components/ui';
+import { Loading, ErrorState, StatusBadge, Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';
 
 export default function AdminComplaintsPage() {
@@ -55,7 +55,7 @@ export default function AdminComplaintsPage() {
                 <div>
                   <h3 className="text-white font-medium text-sm">{complaint.subject}</h3>
                   <p className="text-gray-500 text-xs mt-1">
-                    {complaint.user_name} · {complaint.invoice_number} · {formatDate(complaint.created_at)}
+                    {complaint.user_name} · {complaint.invoice} · {formatDate(complaint.created_at)}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">

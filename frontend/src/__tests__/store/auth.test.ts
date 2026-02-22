@@ -16,7 +16,7 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 describe('useAuthStore', () => {
   beforeEach(() => {
     localStorageMock.clear();
-    useAuthStore.setState({ user: null, token: null });
+    useAuthStore.setState({ user: null, token: null, isAuthenticated: false });
   });
 
   const mockUser: User = {
@@ -31,6 +31,7 @@ describe('useAuthStore', () => {
     const state = useAuthStore.getState();
     expect(state.user).toBeNull();
     expect(state.token).toBeNull();
+    expect(state.isAuthenticated).toBe(false);
   });
 
   it('setAuth sets user and token', () => {
@@ -38,6 +39,7 @@ describe('useAuthStore', () => {
     const state = useAuthStore.getState();
     expect(state.user).toEqual(mockUser);
     expect(state.token).toBe('test-token-123');
+    expect(state.isAuthenticated).toBe(true);
   });
 
   it('setAuth saves to localStorage', () => {
@@ -52,6 +54,7 @@ describe('useAuthStore', () => {
     const state = useAuthStore.getState();
     expect(state.user).toBeNull();
     expect(state.token).toBeNull();
+    expect(state.isAuthenticated).toBe(false);
   });
 
   it('logout clears localStorage', () => {

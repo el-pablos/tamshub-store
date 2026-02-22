@@ -10,6 +10,7 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  void error;
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center px-4 text-center">
       <FuzzyText text="500" className="text-7xl sm:text-9xl font-bold text-red-500 mb-4" />

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 
 interface CountUpProps {
   end: number;
@@ -16,24 +16,7 @@ export default function CountUp({ end, duration = 2000, prefix = '', suffix = ''
   const elementRef = useRef<HTMLSpanElement>(null);
   const hasAnimated = useRef(false);
 
-  useEffect(() => {
-    if (hasAnimated.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          animateCount();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (elementRef.current) observer.observe(elementRef.current);
-    return () => observer.disconnect();
-  }, [end]);
-
-  const animateCount = () => {
+  const animateCount = useCallback(() => {
     if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setCount(end);
       return;
@@ -54,7 +37,24 @@ export default function CountUp({ end, duration = 2000, prefix = '', suffix = ''
       }
     };
     requestAnimationFrame(animate);
-  };
+  }, [end, duration]);
+
+  useEffect(() => {
+    if (hasAnimated.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          animateCount();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (elementRef.current) observer.observe(elementRef.current);
+    return () => observer.disconnect();
+  }, [end, animateCount]);
 
   return (
     <span ref={elementRef} className={className}>

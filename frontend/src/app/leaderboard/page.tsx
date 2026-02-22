@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Trophy, Medal, Crown, ChevronDown } from 'lucide-react';
+import { Trophy, Medal, Crown } from 'lucide-react';
 import { useLeaderboard } from '@/hooks/useApi';
 import { Loading, ErrorState } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
@@ -66,12 +66,12 @@ export default function LeaderboardPage() {
             >
               <div className="w-8 flex justify-center">{getRankIcon(index + 1)}</div>
               <div className="flex-1 min-w-0">
-                <p className="text-white font-medium text-sm truncate">{entry.user_name}</p>
+                <p className="text-white font-medium text-sm truncate">{entry.user_display}</p>
                 <p className="text-gray-500 text-xs">{entry.total_transactions} transaksi</p>
               </div>
               <div className="text-right">
                 <p className="text-indigo-400 font-bold text-sm">
-                  {formatCurrency(entry.total_spent)}
+                  {formatCurrency(entry.total_amount)}
                 </p>
               </div>
             </div>

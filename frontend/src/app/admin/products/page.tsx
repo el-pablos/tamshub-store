@@ -69,7 +69,7 @@ export default function AdminProductsPage() {
               <tbody className="divide-y divide-gray-800">
                 {data?.data?.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-800/50">
-                    <td className="p-4 text-white">{product.name}</td>
+                    <td className="p-4 text-white">{product.product_name}</td>
                     <td className="p-4 text-gray-400">{product.brand}</td>
                     <td className="p-4 text-gray-400">{product.category_name}</td>
                     <td className="p-4 text-gray-400 text-xs">{product.prices_count} varian</td>

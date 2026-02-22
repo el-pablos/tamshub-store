@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Search, Power, UserCheck } from 'lucide-react';
+import { Search, Power } from 'lucide-react';
 import { useAdminUsers, useToggleUser } from '@/hooks/useAdminApi';
 import { Loading, ErrorState, Button } from '@/components/ui';
 import { formatDate } from '@/lib/utils';

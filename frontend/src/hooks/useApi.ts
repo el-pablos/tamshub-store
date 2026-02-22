@@ -98,8 +98,8 @@ export function useCheckout() {
     mutationFn: async (payload: {
       product_id: number;
       target_id: string;
-      target_server?: string;
-      payment_method_code: string;
+      zone_id?: string;
+      payment_method: string;
       phone?: string;
       email?: string;
     }) => {

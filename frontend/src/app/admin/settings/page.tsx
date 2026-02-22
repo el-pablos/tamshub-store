@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Save } from 'lucide-react';
 import { useAdminSettings, useUpdateSettings } from '@/hooks/useAdminApi';
 import { Loading, ErrorState, Button, Input } from '@/components/ui';
@@ -18,11 +18,8 @@ const settingLabels: Record<string, { label: string; type: string }> = {
 export default function AdminSettingsPage() {
   const { data: settings, isLoading, error, refetch } = useAdminSettings();
   const updateSettings = useUpdateSettings();
-  const [form, setForm] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (settings) setForm(settings);
-  }, [settings]);
+  const initialForm = settings ?? {};
+  const [form, setForm] = useState<Record<string, string>>(initialForm);
 
   const handleSave = async () => {
     await updateSettings.mutateAsync(form);

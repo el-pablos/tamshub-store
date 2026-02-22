@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useProducts, useCategories } from '@/hooks/useApi';
@@ -10,6 +10,14 @@ import { Loading, ErrorState } from '@/components/ui';
 import { formatCurrency } from '@/lib/utils';
 
 export default function ProductsPage() {
+  return (
+    <Suspense fallback={<Loading fullScreen text="Memuat produk..." />}>
+      <ProductsContent />
+    </Suspense>
+  );
+}
+
+function ProductsContent() {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get('category') || '';
   
@@ -95,17 +103,19 @@ export default function ProductsPage() {
               <Link href={`/products/${product.slug}`} className="block p-4 group">
                 <div className="aspect-square rounded-lg bg-gray-800 mb-3 overflow-hidden flex items-center justify-center">
                   {product.image_url ? (
-                    <img
-                      src={product.image_url}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
+                    <picture>
+                      <img
+                        src={product.image_url}
+                        alt={product.product_name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </picture>
                   ) : (
                     <span className="text-4xl">🎮</span>
                   )}
                 </div>
                 <h3 className="text-white text-sm font-medium truncate group-hover:text-indigo-400 transition-colors">
-                  {product.name}
+                  {product.product_name}
                 </h3>
                 <p className="text-gray-500 text-xs mt-1">{product.brand}</p>
                 {product.base_price && (

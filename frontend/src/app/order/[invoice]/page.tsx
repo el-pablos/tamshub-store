@@ -59,7 +59,7 @@ export default function OrderStatusPage() {
           <div className="flex justify-between items-center">
             <span className="text-gray-400">Invoice</span>
             <div className="flex items-center gap-2">
-              <span className="text-white font-mono text-xs">{order.invoice_number}</span>
+              <span className="text-white font-mono text-xs">{order.invoice}</span>
               <button onClick={copyInvoice} className="text-gray-500 hover:text-white transition-colors">
                 <Copy size={14} />
               </button>
@@ -68,11 +68,11 @@ export default function OrderStatusPage() {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Produk</span>
-            <span className="text-white">{order.product_name}</span>
+            <span className="text-white">{order.product?.product_name ?? '-'}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Target</span>
-            <span className="text-white">{order.target_id}{order.target_server ? ` (${order.target_server})` : ''}</span>
+            <span className="text-white">{order.target_id}{order.zone_id ? ` (${order.zone_id})` : ''}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Pembayaran</span>
@@ -81,16 +81,16 @@ export default function OrderStatusPage() {
           <hr className="border-gray-700" />
           <div className="flex justify-between font-bold">
             <span className="text-gray-300">Total</span>
-            <span className="text-indigo-400">{formatCurrency(order.total_price)}</span>
+            <span className="text-indigo-400">{formatCurrency(order.total_amount)}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-400">Waktu</span>
             <span className="text-gray-300 text-xs">{formatDate(order.created_at)}</span>
           </div>
-          {order.sn && (
+          {order.provider_sn && (
             <div className="flex justify-between">
               <span className="text-gray-400">SN / Ref</span>
-              <span className="text-green-400 font-mono text-xs">{order.sn}</span>
+              <span className="text-green-400 font-mono text-xs">{order.provider_sn}</span>
             </div>
           )}
         </div>

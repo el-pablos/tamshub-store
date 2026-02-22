@@ -14,13 +14,13 @@ export function useAdminDashboard() {
         today_orders: number;
         recent_orders: Array<{
           id: number;
-          invoice_number: string;
+          invoice: string;
           product_name: string;
-          total_price: number;
+          total_amount: number;
           status: string;
           created_at: string;
         }>;
-      }>>('/admin/dashboard');
+      }>>('/admin/dashboard/stats');
       return data.data;
     },
   });
@@ -34,10 +34,10 @@ export function useAdminOrders(params?: { status?: string; page?: number; search
       const { data } = await api.get<ApiResponse<{
         data: Array<{
           id: number;
-          invoice_number: string;
+          invoice: string;
           product_name: string;
           target_id: string;
-          total_price: number;
+          total_amount: number;
           status: string;
           payment_method: string;
           created_at: string;
@@ -80,7 +80,7 @@ export function useAdminProducts(params?: { page?: number; search?: string }) {
       const { data } = await api.get<ApiResponse<{
         data: Array<{
           id: number;
-          name: string;
+          product_name: string;
           slug: string;
           brand: string;
           category_name: string;
@@ -159,7 +159,7 @@ export function useAdminComplaints(params?: { status?: string; page?: number }) 
       const { data } = await api.get<ApiResponse<{
         data: Array<{
           id: number;
-          invoice_number: string;
+          invoice: string;
           subject: string;
           status: string;
           user_name: string;
@@ -189,7 +189,7 @@ export function useAdminSettings() {
   return useQuery({
     queryKey: ['admin-settings'],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<Record<string, string>>>('/admin/settings');
+      const { data } = await api.get<ApiResponse<Record<string, string>>>('/admin/settings/site');
       return data.data;
     },
   });
@@ -199,7 +199,7 @@ export function useUpdateSettings() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (settings: Record<string, string>) => {
-      const { data } = await api.put<ApiResponse<unknown>>('/admin/settings', { settings });
+      const { data } = await api.put<ApiResponse<unknown>>('/admin/settings/site', { settings });
       return data.data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['admin-settings'] }),

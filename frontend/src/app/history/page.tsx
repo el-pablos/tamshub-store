@@ -41,20 +41,20 @@ export default function HistoryPage() {
           {orders.map((order) => (
             <Link
               key={order.id}
-              href={`/order/${order.invoice_number}`}
+              href={`/order/${order.invoice}`}
               className="block bg-gray-800/50 border border-gray-700/50 rounded-xl p-4 hover:border-indigo-500/30 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-white font-medium text-sm">{order.product_name}</span>
+                <span className="text-white font-medium text-sm">{order.product?.product_name ?? 'Produk'}</span>
                 <StatusBadge status={order.status} />
               </div>
               <div className="flex items-center justify-between text-xs text-gray-500">
-                <span>{order.invoice_number}</span>
+                <span>{order.invoice}</span>
                 <span>{formatDate(order.created_at)}</span>
               </div>
               <div className="flex items-center justify-between mt-2">
                 <span className="text-gray-400 text-xs">Target: {order.target_id}</span>
-                <span className="text-indigo-400 font-semibold text-sm">{formatCurrency(order.total_price)}</span>
+                <span className="text-indigo-400 font-semibold text-sm">{formatCurrency(order.total_amount)}</span>
               </div>
             </Link>
           ))}
