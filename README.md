@@ -14,15 +14,18 @@ Platform top-up game dan layanan digital dengan integrasi **Digiflazz** (provide
 
 - [Arsitektur](#-arsitektur)
 - [Tech Stack](#-tech-stack)
+- [Preview Tampilan](#-preview-tampilan)
 - [Fitur Utama](#-fitur-utama)
 - [Struktur Proyek](#-struktur-proyek)
 - [Instalasi & Setup](#-instalasi--setup)
 - [Environment Variables](#-environment-variables)
 - [API Endpoints](#-api-endpoints)
 - [Testing](#-testing)
+- [Hasil Pengujian Playwright](#-hasil-pengujian-playwright)
 - [CI/CD Pipeline](#-cicd-pipeline)
 - [Alur Checkout](#-alur-checkout)
 - [Database Schema](#-database-schema)
+- [Catatan QA & Debugging](#-catatan-qa--debugging)
 
 ---
 
@@ -68,6 +71,60 @@ graph TB
 | **State Management** | Zustand (client), React Query (server) |
 | **Animasi** | React Bits (ShuffleText, FuzzyText, CountUp, ClickSpark, LaserFlow, PixelBlast, ElectricBorder) |
 | **CI/CD** | GitHub Actions |
+
+---
+
+## 🖼 Preview Tampilan
+
+### Halaman Publik
+
+| Landing / Beranda | Katalog Produk |
+|:-:|:-:|
+| ![Landing](docs/screenshots/01-landing-beranda.png) | ![Produk](docs/screenshots/02-katalog-produk.png) |
+
+| Detail Produk | Checkout — Data Akun |
+|:-:|:-:|
+| ![Detail](docs/screenshots/03-detail-produk.png) | ![Data Akun](docs/screenshots/04-checkout-data-akun.png) |
+
+| Checkout — Pembayaran | Leaderboard |
+|:-:|:-:|
+| ![Pembayaran](docs/screenshots/05-checkout-pembayaran.png) | ![Leaderboard](docs/screenshots/06-leaderboard.png) |
+
+| Cek Transaksi | Order Success |
+|:-:|:-:|
+| ![Cek Transaksi](docs/screenshots/07-cek-transaksi.png) | ![Order Success](docs/screenshots/08-order-success.png) |
+
+| Order Pending | Login |
+|:-:|:-:|
+| ![Order Pending](docs/screenshots/09-order-pending.png) | ![Login](docs/screenshots/10-login.png) |
+
+| Register | FAQ |
+|:-:|:-:|
+| ![Register](docs/screenshots/11-register.png) | ![FAQ](docs/screenshots/12-faq.png) |
+
+| 404 Not Found |
+|:-:|
+| ![404](docs/screenshots/13-not-found.png) |
+
+### Admin Dashboard
+
+| Dashboard | Manajemen Produk |
+|:-:|:-:|
+| ![Admin Dashboard](docs/screenshots/14-admin-dashboard.png) | ![Admin Produk](docs/screenshots/15-admin-produk.png) |
+
+| Manajemen Pesanan | Manajemen Pengguna |
+|:-:|:-:|
+| ![Admin Pesanan](docs/screenshots/16-admin-pesanan.png) | ![Admin Pengguna](docs/screenshots/17-admin-pengguna.png) |
+
+| Manajemen Komplain | Pengaturan |
+|:-:|:-:|
+| ![Admin Komplain](docs/screenshots/18-admin-komplain.png) | ![Admin Pengaturan](docs/screenshots/19-admin-pengaturan.png) |
+
+### Tampilan Mobile Responsive
+
+| Mobile Landing | Mobile Produk |
+|:-:|:-:|
+| ![Mobile Landing](docs/screenshots/20-mobile-landing.png) | ![Mobile Produk](docs/screenshots/21-mobile-produk.png) |
 
 ---
 
@@ -139,6 +196,15 @@ tamshub-store/
 │   │   ├── store/           # Zustand auth store
 │   │   └── types/           # TypeScript interfaces
 │   └── __tests__/           # Jest tests (54 tests)
+├── tests/playwright/        # Playwright E2E tests (91 tests)
+│   ├── helpers/             # Auth, routes, assertions
+│   ├── public-pages.spec.ts # Landing, produk, checkout, leaderboard
+│   ├── admin-flow.spec.ts   # Admin dashboard & CRUD
+│   ├── user-flow.spec.ts    # Login, checkout E2E, order status
+│   ├── responsive.spec.ts   # Mobile, tablet, desktop
+│   ├── error-pages.spec.ts  # 404, error boundary
+│   └── screenshots.spec.ts  # Automated screenshot capture
+├── docs/screenshots/        # 21 automated screenshots
 └── README.md
 ```
 
@@ -302,6 +368,45 @@ Cakupan test:
 
 ---
 
+## 🎭 Hasil Pengujian Playwright
+
+### E2E Test (Playwright v1.58.2 — Chromium)
+
+```
+✅ 91 tests passed (4.5 menit) — 0 failed
+```
+
+| Test Suite | Jumlah | Status |
+|------------|--------|--------|
+| Public Pages (routes, landing, produk, checkout, leaderboard, order) | 31 | ✅ All Pass |
+| Admin Flow (login, semua halaman, CRUD, sidebar navigation) | 20 | ✅ All Pass |
+| User Flow (login, browse, checkout E2E, order status) | 10 | ✅ All Pass |
+| Responsive (mobile 390px, tablet 768px, desktop 1366px) | 24 | ✅ All Pass |
+| Error Pages (404, error boundary, unauthorized) | 6 | ✅ All Pass |
+
+### Cara Menjalankan Playwright Tests
+
+```bash
+# Install (satu kali)
+npm install
+npx playwright install chromium
+
+# Jalankan semua test
+npx playwright test --project=desktop-chromium
+
+# Jalankan test spesifik
+npx playwright test -g "checkout flow"
+
+# Ambil screenshots
+npx playwright test tests/playwright/screenshots.spec.ts
+```
+
+### Screenshot Automation
+
+21 screenshot otomatis diambil oleh Playwright ke `docs/screenshots/`. Mencakup semua halaman publik, admin dashboard, dan tampilan mobile responsive.
+
+---
+
 ## 🔄 CI/CD Pipeline
 
 ```mermaid
@@ -456,7 +561,33 @@ erDiagram
 
 ---
 
-## 📄 Lisensi
+## � Catatan QA & Debugging
+
+Bug-bug yang ditemukan dan diperbaiki selama audit Playwright:
+
+### 1. CSRF Token Mismatch pada Login (Backend)
+- **Masalah**: `$middleware->statefulApi()` di `bootstrap/app.php` mengaktifkan CSRF verification untuk first-party API request dari localhost. Karena frontend menggunakan Bearer token auth (bukan cookie), ini menyebabkan error "CSRF token mismatch" pada login dan form submission.
+- **Fix**: Menghapus `$middleware->statefulApi()` dari `bootstrap/app.php`.
+
+### 2. Auth State Tidak Terbaca Setelah Reload (Frontend)
+- **Masalah**: `loadFromStorage()` di Zustand auth store tidak pernah dipanggil saat aplikasi dimuat, sehingga user yang sudah login terlihat logout setelah refresh.
+- **Fix**: Menambahkan `getInitialState()` function yang membaca localStorage secara sinkron saat store pertama kali di-create, sehingga auth state langsung tersedia tanpa menunggu `useEffect`.
+
+### 3. Product Prices Tidak Muncul di Detail Produk (Backend)
+- **Masalah**: Frontend mengharapkan `product.prices[]` array berisi denomination options (misal: 86 Diamonds, 172 Diamonds, dst.), tapi `ProductResource` hanya mengembalikan satu `price` number. Setiap denomination adalah baris `Product` terpisah di database.
+- **Fix**: Menambahkan sibling product query di `ProductController::show()` — produk dengan brand & category yang sama dikembalikan sebagai `prices` array dalam response.
+
+### 4. Redis Database Index Out of Range
+- **Masalah**: Redis Cloud free tier hanya mendukung database 0. Config default menggunakan database 1 untuk cache.
+- **Fix**: Set `REDIS_DB=0` dan `REDIS_CACHE_DB=0` di `.env`.
+
+### 5. IPv6 Resolution (ECONNREFUSED ::1)
+- **Masalah**: `localhost` di-resolve ke `::1` (IPv6) pada beberapa sistem, tapi server hanya listen di `0.0.0.0`.
+- **Fix**: Menggunakan `127.0.0.1` secara eksplisit di `NEXT_PUBLIC_API_URL` dan test helper.
+
+---
+
+## �📄 Lisensi
 
 Private repository — hak cipta dilindungi.
 
