@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@tailwindcss/postcss": "^4.2.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.2.0"
+  },
+  "name": "web-toup-up-game-customer",
+  "version": "1.0.0",
+  "description": "Platform top-up game dan layanan digital dengan integrasi **Digiflazz** (provider produk) dan **Duitku** (payment gateway). Dibangun dengan arsitektur **Laravel API + Next.js SPA**.",
+  "main": "index.js",
+  "dependencies": {
+    "playwright": "^1.58.2",
+    "playwright-core": "^1.58.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
